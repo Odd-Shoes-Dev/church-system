@@ -16,34 +16,34 @@ export default async function RegistrationLayout({
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="border-b border-[var(--color-border)] px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-3">
+      <header className="border-b border-[var(--color-border)] px-3 sm:px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
           {tenant?.logo_url && (
             <img
               src={tenant.logo_url}
               alt={`${tenant.name} logo`}
-              className="h-8 w-auto object-contain"
+              className="h-7 sm:h-8 w-auto object-contain shrink-0"
             />
           )}
-          <h1 className="text-lg font-[var(--font-heading)] text-[var(--color-text)]">
+          <h1 className="text-base sm:text-lg font-[var(--font-heading)] text-[var(--color-text)] truncate">
             {tenant?.name ?? "Registration"}
           </h1>
         </div>
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-[var(--color-muted)]">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          <span className="text-xs sm:text-sm text-[var(--color-muted)] hidden sm:inline">
             {user.name}
           </span>
           <form action="/api/auth/logout" method="POST">
             <button
               type="submit"
-              className="text-sm text-[var(--color-muted)] hover:text-[var(--color-text)] underline cursor-pointer"
+              className="text-xs sm:text-sm text-[var(--color-muted)] hover:text-[var(--color-text)] underline cursor-pointer"
             >
               Sign out
             </button>
           </form>
         </div>
       </header>
-      <main className="flex-1 flex items-center justify-center p-4">
+      <main className="flex-1 flex items-start sm:items-center justify-center p-3 sm:p-4">
         <div className="w-full max-w-lg">{children}</div>
       </main>
     </div>

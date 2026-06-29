@@ -1,6 +1,7 @@
 import { requireAuth } from "@/lib/auth/guard";
 import { getDatabase } from "@/lib/providers/database";
 import { SuperAdminSidebar } from "@/components/super-admin/sidebar";
+import { MobileSidebarWrapper } from "@/components/layout/mobile-sidebar-wrapper";
 
 export default async function SuperAdminLayout({
   children,
@@ -16,12 +17,15 @@ export default async function SuperAdminLayout({
   );
 
   return (
-    <div className="flex min-h-screen">
-      <SuperAdminSidebar
-        userName={user.name}
-        tenantName={tenant?.name ?? "Unknown Church"}
-      />
-      <main className="flex-1 p-8 overflow-y-auto">{children}</main>
-    </div>
+    <MobileSidebarWrapper
+      sidebar={
+        <SuperAdminSidebar
+          userName={user.name}
+          tenantName={tenant?.name ?? "Unknown Church"}
+        />
+      }
+    >
+      {children}
+    </MobileSidebarWrapper>
   );
 }

@@ -1,6 +1,7 @@
 import { requireAuth } from "@/lib/auth/guard";
 import { getDatabase } from "@/lib/providers/database";
 import { Sidebar } from "@/components/admin/sidebar";
+import { MobileSidebarWrapper } from "@/components/layout/mobile-sidebar-wrapper";
 
 export default async function AdminLayout({
   children,
@@ -16,13 +17,16 @@ export default async function AdminLayout({
   );
 
   return (
-    <div className="flex min-h-screen">
-      <Sidebar
-        userName={user.name}
-        branchName={branch?.name ?? "Unknown Branch"}
-        role={user.role}
-      />
-      <main className="flex-1 p-8 overflow-y-auto">{children}</main>
-    </div>
+    <MobileSidebarWrapper
+      sidebar={
+        <Sidebar
+          userName={user.name}
+          branchName={branch?.name ?? "Unknown Branch"}
+          role={user.role}
+        />
+      }
+    >
+      {children}
+    </MobileSidebarWrapper>
   );
 }
