@@ -19,6 +19,26 @@ export function themeToCSS(settings?: Partial<ThemeSettings>): string {
   ].join("; ");
 }
 
+export function themeToStyleObject(
+  settings?: Partial<ThemeSettings>
+): Record<string, string> {
+  const t = { ...DEFAULT_THEME, ...settings };
+  return {
+    "--color-primary": t.primaryColor,
+    "--color-secondary": t.secondaryColor,
+    "--color-background": t.backgroundColor,
+    "--color-text": t.textColor,
+    "--color-accent": t.accentColor,
+    "--color-surface": t.surfaceColor,
+    "--color-border": t.borderColor,
+    "--color-muted": t.mutedColor,
+    "--font-heading": `'${t.headingFont}', serif`,
+    "--font-body": `'${t.bodyFont}', serif`,
+    "--font-size-base": `${t.baseFontSize}px`,
+    "--radius": t.borderRadius,
+  };
+}
+
 export function themeRowToSettings(row: Record<string, unknown>): ThemeSettings {
   return {
     primaryColor: (row.primary_color as string) ?? DEFAULT_THEME.primaryColor,
