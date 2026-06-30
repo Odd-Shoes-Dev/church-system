@@ -34,6 +34,15 @@ export function SuperAdminSidebar({ userName, tenantName }: SidebarProps) {
         <p className="text-xs text-[var(--color-muted)] mt-1">{tenantName}</p>
       </div>
 
+      <div className="p-3 border-b border-[var(--color-border)]">
+        <Link
+          href="/register"
+          className="block w-full text-center px-3 py-2 rounded-[var(--radius)] text-sm font-medium bg-[var(--color-primary)] text-[var(--color-background)] hover:opacity-90 transition-opacity"
+        >
+          New Registration
+        </Link>
+      </div>
+
       <nav className="flex-1 p-3 flex flex-col gap-0.5 overflow-y-auto">
         {NAV_ITEMS.map((item) => {
           const isActive =
