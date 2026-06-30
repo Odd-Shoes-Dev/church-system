@@ -28,6 +28,7 @@ export class NeonProvider implements DatabaseProvider {
 
   async execute(sql: string, params?: unknown[]): Promise<number> {
     const result = await this.sql.query(sql, params ?? []);
+    if (Array.isArray(result)) return result.length;
     return result.rowCount ?? 0;
   }
 }
