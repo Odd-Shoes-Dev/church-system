@@ -2,7 +2,7 @@
 -- Password for all users: "password123" (bcrypt hash)
 
 INSERT INTO tenants (id, name, slug)
-VALUES ('a0000000-0000-0000-0000-000000000001'::uuid, 'Grace Community Church', 'grace-community')
+VALUES ('a0000000-0000-0000-0000-000000000001'::uuid, 'Grace Community Church', 'grace-community-system')
 ON CONFLICT (slug) DO NOTHING;
 
 INSERT INTO branches (id, tenant_id, name, location, country_code, is_main)

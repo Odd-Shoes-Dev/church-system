@@ -8,7 +8,7 @@ export function middleware(request: NextRequest) {
   let tenantSlug: string | null = null;
 
   if (host === "localhost" || host === "127.0.0.1") {
-    tenantSlug = request.cookies.get("tenant-slug")?.value ?? "demo";
+    tenantSlug = request.cookies.get("tenant-slug")?.value ?? "grace-community-system";
   } else if (host.endsWith(baseDomain) && host !== baseDomain) {
     tenantSlug = host.replace(`.${baseDomain}`, "");
   } else if (host !== baseDomain) {
