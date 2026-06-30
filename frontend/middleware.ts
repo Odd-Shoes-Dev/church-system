@@ -7,12 +7,18 @@ export function middleware(request: NextRequest) {
 
   let tenantSlug: string | null = null;
 
-  if (host === "localhost" || host === "127.0.0.1") {
+  const parts = host.split(".");
+
+  if (parts.length === 2 && parts[1] === "localhost") {
+    // grace-community-system.localhost — Chrome/Edge resolve *.localhost natively
+    if (parts[0] && parts[0] !== "www") tenantSlug = parts[0];
+  } else if (host === "localhost" || host === "127.0.0.1") {
+    // Plain localhost — dev convenience, no subdomain in URL
     tenantSlug = request.cookies.get("tenant-slug")?.value ?? "grace-community-system";
-  } else if (host.endsWith(baseDomain) && host !== baseDomain) {
-    tenantSlug = host.replace(`.${baseDomain}`, "");
+  } else if (host !== baseDomain && host.endsWith(`.${baseDomain}`)) {
+    tenantSlug = host.slice(0, host.length - baseDomain.length - 1);
   } else if (host !== baseDomain) {
-    // Custom domain — set a header so the app can resolve it via DB lookup
+    // Custom domain — let the app resolve it via DB lookup
     const response = NextResponse.next();
     response.headers.set("x-custom-domain", host);
     return response;
@@ -22,7 +28,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const response = NextResponse.next();
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-tenant-slug", tenantSlug);
+
+  const response = NextResponse.next({ request: { headers: requestHeaders } });
   response.headers.set("x-tenant-slug", tenantSlug);
 
   if (!request.cookies.get("tenant-slug")) {

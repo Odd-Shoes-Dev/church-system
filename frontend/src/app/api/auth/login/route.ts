@@ -21,6 +21,27 @@ interface BranchRow {
   is_main: boolean;
 }
 
+function resolveTenantSlug(request: NextRequest): string | null {
+  const fromHeader = request.headers.get("x-tenant-slug");
+  if (fromHeader) return fromHeader;
+
+  const fromCookie = request.cookies.get("tenant-slug")?.value;
+  if (fromCookie) return fromCookie;
+
+  const host = (request.headers.get("host") ?? "").split(":")[0];
+  const baseDomain = (process.env.BASE_DOMAIN ?? "localhost:3000").split(":")[0];
+  const parts = host.split(".");
+
+  if (parts.length === 2 && parts[1] === "localhost" && parts[0] !== "www") {
+    return parts[0];
+  }
+  if (host !== baseDomain && host.endsWith(`.${baseDomain}`)) {
+    return host.slice(0, host.length - baseDomain.length - 1);
+  }
+
+  return null;
+}
+
 export async function POST(request: NextRequest) {
   const body = await request.json();
   const { email, password, branchId } = body;
@@ -32,15 +53,10 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const tenantSlug =
-    request.headers.get("x-tenant-slug") ??
-    request.cookies.get("tenant-slug")?.value;
+  const tenantSlug = resolveTenantSlug(request);
 
   if (!tenantSlug) {
-    return NextResponse.json(
-      { error: "Tenant not found" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "Tenant not found" }, { status: 400 });
   }
 
   const db = getDatabase();

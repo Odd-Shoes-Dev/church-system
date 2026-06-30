@@ -12,8 +12,10 @@ export class NeonProvider implements DatabaseProvider {
     sql: string,
     params?: unknown[]
   ): Promise<T[]> {
-    const result = await this.sql(sql as unknown as TemplateStringsArray, ...(params ?? []));
-    return result as T[];
+    const result = await this.sql.query(sql, params ?? []);
+    // sql.query returns either a FullQueryResults object or an array directly
+    if (Array.isArray(result)) return result as T[];
+    return (result.rows ?? []) as T[];
   }
 
   async queryOne<T = Record<string, unknown>>(
@@ -25,7 +27,7 @@ export class NeonProvider implements DatabaseProvider {
   }
 
   async execute(sql: string, params?: unknown[]): Promise<number> {
-    const result = await this.sql(sql as unknown as TemplateStringsArray, ...(params ?? []));
-    return Array.isArray(result) ? result.length : 0;
+    const result = await this.sql.query(sql, params ?? []);
+    return result.rowCount ?? 0;
   }
 }
