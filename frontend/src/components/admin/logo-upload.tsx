@@ -72,6 +72,7 @@ export function LogoUpload() {
   }
 
   async function handleRemove() {
+    if (!confirm("Remove the church logo? This cannot be undone.")) return;
     await fetch("/api/admin/settings/logo", { method: "DELETE" });
     setLogoUrl(null);
   }
