@@ -1,36 +1,24 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useRegistrationStore } from "@/lib/registration/store";
+import { usePrefetchCache } from "@/lib/registration/prefetch-context";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { RadioGroup } from "@/components/ui/radio-group";
 import { Spinner } from "@/components/ui/spinner";
-
-interface EventOption {
-  id: string;
-  name: string;
-}
+import { useState } from "react";
 
 export function EventPicker() {
   const { data, updateData, setStep } = useRegistrationStore();
-  const [events, setEvents] = useState<EventOption[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { cache } = usePrefetchCache();
   const [selected, setSelected] = useState(data.eventId ?? "");
 
-  useEffect(() => {
-    fetch("/api/events")
-      .then((r) => r.json())
-      .then((d) => setEvents(d.events ?? []))
-      .finally(() => setLoading(false));
-  }, []);
+  const events = cache.events ?? [];
+  const loading = cache.loading.events;
 
   function handleNext() {
     const evt = events.find((e) => e.id === selected);
-    updateData({
-      eventId: evt?.id ?? null,
-      eventName: evt?.name ?? null,
-    });
+    updateData({ eventId: evt?.id ?? null, eventName: evt?.name ?? null });
     setStep("details");
   }
 

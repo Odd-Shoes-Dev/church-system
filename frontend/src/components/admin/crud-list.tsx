@@ -134,7 +134,7 @@ export function CrudList({
                 }
               />
             ))}
-            {error && <p className="text-sm text-red-700">{error}</p>}
+            {error && <p className="text-sm text-[var(--color-error)]">{error}</p>}
             <div className="flex gap-2">
               <Button type="submit" disabled={saving} size="sm">
                 {saving ? "Saving..." : editingId ? "Update" : "Create"}

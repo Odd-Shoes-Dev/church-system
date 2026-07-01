@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRegistrationStore } from "@/lib/registration/store";
+import { usePrefetchCache } from "@/lib/registration/prefetch-context";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
 
 interface MemberMatch {
   id: string;
@@ -17,25 +19,22 @@ interface MemberMatch {
 
 export function PhoneLookup() {
   const { data, updateData, setStep } = useRegistrationStore();
-  const [matches, setMatches] = useState<MemberMatch[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selected, setSelected] = useState<string | null>(
-    data.existingMemberId
-  );
+  const { cache, prefetchMembers } = usePrefetchCache();
+  const [selected, setSelected] = useState<string | null>(data.existingMemberId);
 
+  // If user somehow arrived here without triggering prefetch, kick it off now
   useEffect(() => {
-    if (!data.phone) {
-      setLoading(false);
-      return;
+    if (data.phone && cache.memberLookup?.phone !== data.phone && !cache.loading.memberLookup) {
+      prefetchMembers(data.phone);
     }
+  }, [data.phone, cache.memberLookup, cache.loading.memberLookup, prefetchMembers]);
 
-    fetch(
-      `/api/members/lookup?phone=${encodeURIComponent(data.phone)}`
-    )
-      .then((r) => r.json())
-      .then((d) => setMatches(d.members ?? []))
-      .finally(() => setLoading(false));
-  }, [data.phone]);
+  const loading = cache.loading.memberLookup ||
+    (data.phone ? cache.memberLookup?.phone !== data.phone : false);
+
+  // Only use cached results if they match the current phone
+  const matches: MemberMatch[] =
+    cache.memberLookup?.phone === data.phone ? cache.memberLookup.members : [];
 
   function handleContinueAsNew() {
     updateData({ existingMemberId: null });
@@ -114,7 +113,7 @@ export function PhoneLookup() {
                 </span>
                 <p className="text-xs text-[var(--color-muted)]">
                   {m.home_branch_name}
-                  {m.last_visit && ` -- Last visit: ${m.last_visit}`}
+                  {m.last_visit && ` — Last visit: ${m.last_visit}`}
                 </p>
               </div>
             </div>

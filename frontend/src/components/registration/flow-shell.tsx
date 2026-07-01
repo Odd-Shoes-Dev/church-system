@@ -1,6 +1,7 @@
 "use client";
 
 import { useRegistrationStore } from "@/lib/registration/store";
+import { RegistrationPrefetchProvider } from "@/lib/registration/prefetch-context";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { FirstTimePrompt } from "./first-time-prompt";
 import { ServicePicker } from "./service-picker";
@@ -39,6 +40,7 @@ export function RegistrationFlow() {
   const stepIndex = STEPS.indexOf(step);
 
   return (
+    <RegistrationPrefetchProvider>
     <div className="flex flex-col gap-6">
       <div>
         <h2 className="text-xl font-[var(--font-heading)] text-[var(--color-text)]">
@@ -56,5 +58,6 @@ export function RegistrationFlow() {
       {step === "prayer" && <PrayerForm />}
       {step === "summary" && <SummaryCard />}
     </div>
+    </RegistrationPrefetchProvider>
   );
 }

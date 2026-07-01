@@ -129,7 +129,7 @@ export default function UsersPage() {
               value={role}
               onChange={(e) => setRole(e.target.value)}
             />
-            {error && <p className="text-sm text-red-700">{error}</p>}
+            {error && <p className="text-sm text-[var(--color-error)]">{error}</p>}
             <div className="flex gap-2">
               <Button type="submit" disabled={saving} size="sm">
                 {saving ? "Creating..." : "Create User"}

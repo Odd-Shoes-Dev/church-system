@@ -6,17 +6,29 @@ export const detailsSchema = z.object({
   phone: z
     .string()
     .min(1, "Phone number is required")
-    .regex(/^\+\d{7,15}$/, "Enter a valid phone number with country code"),
+    .regex(/^\+\d{7,15}$/, "Enter a valid phone number starting with your country code, e.g. +256700000000"),
   email: z
     .string()
-    .email("Enter a valid email")
-    .or(z.literal("")),
-  gender: z.enum(["male", "female"]),
-  ageGroup: z.enum(["child", "teen", "young_adult", "adult", "senior"]),
+    .email("Enter a valid email address, e.g. name@example.com")
+    .or(z.literal(""))
+    .optional(),
+  gender: z
+    .string()
+    .nullable()
+    .optional()
+    .refine((v) => !!v && ["male", "female"].includes(v), "Please select your gender"),
+  ageGroup: z
+    .string()
+    .nullable()
+    .optional()
+    .refine(
+      (v) => !!v && ["child", "teen", "young_adult", "adult", "senior"].includes(v),
+      "Please select an age group"
+    ),
   district: z.string().optional(),
   occupation: z.string().optional(),
   maritalStatus: z
-    .enum(["single", "married", "widowed", "divorced"])
+    .string()
     .optional()
     .nullable(),
 });

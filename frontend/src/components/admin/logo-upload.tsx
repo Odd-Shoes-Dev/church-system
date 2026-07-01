@@ -130,7 +130,7 @@ export function LogoUpload() {
             Uploading...
           </p>
         )}
-        {error && <p className="text-xs text-red-700 mt-2">{error}</p>}
+        {error && <p className="text-xs text-[var(--color-error)] mt-2">{error}</p>}
       </div>
     </Card>
   );

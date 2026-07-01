@@ -10,6 +10,7 @@ interface RadioOption {
 interface RadioGroupProps {
   name: string;
   label?: string;
+  labelSuffix?: React.ReactNode;
   options: RadioOption[];
   value: string | null;
   onChange: (value: string) => void;
@@ -20,6 +21,7 @@ interface RadioGroupProps {
 export function RadioGroup({
   name,
   label,
+  labelSuffix,
   options,
   value,
   onChange,
@@ -30,7 +32,7 @@ export function RadioGroup({
     <fieldset className="flex flex-col gap-2">
       {label && (
         <legend className="text-sm font-[var(--font-body)] text-[var(--color-text)] mb-1">
-          {label}
+          {label}{labelSuffix}
         </legend>
       )}
       <div
@@ -63,7 +65,7 @@ export function RadioGroup({
           </label>
         ))}
       </div>
-      {error && <span className="text-sm text-red-700">{error}</span>}
+      {error && <span className="text-sm text-[var(--color-error)]">{error}</span>}
     </fieldset>
   );
 }

@@ -81,7 +81,7 @@ export function SummaryCard() {
       </div>
 
       {error && (
-        <p className="text-sm text-red-700 mt-4">{error}</p>
+        <p className="text-sm text-[var(--color-error)] mt-4">{error}</p>
       )}
 
       <div className="flex gap-3 mt-6">

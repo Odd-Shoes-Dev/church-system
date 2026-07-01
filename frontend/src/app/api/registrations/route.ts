@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDatabase } from "@/lib/providers/database";
 import { getSessionUser } from "@/lib/auth/session";
+import { detailsSchema } from "@/lib/registration/validation";
 
 export async function POST(request: NextRequest) {
   const user = await getSessionUser();
@@ -12,6 +13,29 @@ export async function POST(request: NextRequest) {
   const db = getDatabase();
 
   let memberId = body.existingMemberId;
+
+  // Validate member details before hitting the DB when creating a new member
+  if (!memberId) {
+    const result = detailsSchema.safeParse({
+      firstName: body.firstName,
+      lastName: body.lastName,
+      phone: body.phone,
+      email: body.email ?? "",
+      gender: body.gender,
+      ageGroup: body.ageGroup,
+      district: body.district,
+      occupation: body.occupation,
+      maritalStatus: body.maritalStatus,
+    });
+
+    if (!result.success) {
+      const first = result.error.issues[0];
+      return NextResponse.json(
+        { error: first?.message ?? "Invalid registration data" },
+        { status: 422 }
+      );
+    }
+  }
 
   if (!memberId) {
     const rows = await db.query<{ id: string }>(

@@ -1,29 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useRegistrationStore } from "@/lib/registration/store";
+import { usePrefetchCache } from "@/lib/registration/prefetch-context";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { RadioGroup } from "@/components/ui/radio-group";
 import { Spinner } from "@/components/ui/spinner";
-
-interface Service {
-  id: string;
-  name: string;
-}
+import { useState } from "react";
 
 export function ServicePicker() {
   const { data, updateData, setStep } = useRegistrationStore();
-  const [services, setServices] = useState<Service[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { cache } = usePrefetchCache();
   const [selected, setSelected] = useState(data.serviceId ?? "");
 
-  useEffect(() => {
-    fetch("/api/services")
-      .then((r) => r.json())
-      .then((d) => setServices(d.services ?? []))
-      .finally(() => setLoading(false));
-  }, []);
+  const services = cache.services ?? [];
+  const loading = cache.loading.services;
 
   function handleNext() {
     const svc = services.find((s) => s.id === selected);

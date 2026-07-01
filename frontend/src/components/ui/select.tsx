@@ -3,13 +3,14 @@ import { clsx } from "clsx";
 
 interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
+  labelSuffix?: React.ReactNode;
   error?: string;
   options: { value: string; label: string }[];
   placeholder?: string;
 }
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
-  ({ label, error, options, placeholder, className, id, ...props }, ref) => {
+  ({ label, labelSuffix, error, options, placeholder, className, id, ...props }, ref) => {
     const selectId = id ?? label?.toLowerCase().replace(/\s+/g, "-");
     return (
       <div className="flex flex-col gap-1">
@@ -18,7 +19,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             htmlFor={selectId}
             className="text-sm font-[var(--font-body)] text-[var(--color-text)]"
           >
-            {label}
+            {label}{labelSuffix}
           </label>
         )}
         <select
@@ -26,7 +27,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           id={selectId}
           className={clsx(
             "w-full px-3 py-2 rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-text)] font-[var(--font-body)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent transition-all",
-            error && "border-red-700",
+            error && "border-[var(--color-error)]",
             className
           )}
           {...props}
@@ -43,7 +44,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           ))}
         </select>
         {error && (
-          <span className="text-sm text-red-700">{error}</span>
+          <span className="text-sm text-[var(--color-error)]">{error}</span>
         )}
       </div>
     );

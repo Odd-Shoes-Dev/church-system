@@ -98,7 +98,7 @@ export default function LoginPage() {
               required
             />
             {error && (
-              <p className="text-sm text-red-700">{error}</p>
+              <p className="text-sm text-[var(--color-error)]">{error}</p>
             )}
             <Button type="submit" disabled={loading} className="w-full mt-2">
               {loading ? "Signing in..." : "Sign In"}
@@ -146,7 +146,7 @@ export default function LoginPage() {
               ))}
             </div>
             {error && (
-              <p className="text-sm text-red-700">{error}</p>
+              <p className="text-sm text-[var(--color-error)]">{error}</p>
             )}
             <Button
               onClick={() => handleLogin(selectedBranch)}

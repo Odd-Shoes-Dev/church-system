@@ -1,29 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useRegistrationStore } from "@/lib/registration/store";
+import { usePrefetchCache } from "@/lib/registration/prefetch-context";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { RadioGroup } from "@/components/ui/radio-group";
 import { Spinner } from "@/components/ui/spinner";
-
-interface ReferralSource {
-  id: string;
-  name: string;
-}
+import { useState } from "react";
 
 export function ReferralPicker() {
   const { data, updateData, setStep } = useRegistrationStore();
-  const [sources, setSources] = useState<ReferralSource[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { cache } = usePrefetchCache();
   const [selected, setSelected] = useState(data.referralSourceId ?? "");
 
-  useEffect(() => {
-    fetch("/api/referral-sources")
-      .then((r) => r.json())
-      .then((d) => setSources(d.sources ?? []))
-      .finally(() => setLoading(false));
-  }, []);
+  const sources = cache.referralSources ?? [];
+  const loading = cache.loading.referralSources;
 
   function handleNext() {
     const src = sources.find((s) => s.id === selected);
