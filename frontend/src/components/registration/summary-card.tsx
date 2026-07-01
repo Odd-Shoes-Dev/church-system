@@ -22,7 +22,7 @@ export function SummaryCard() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  async function handleSave(andNew: boolean) {
+  async function handleSave() {
     setSaving(true);
     setError("");
 
@@ -40,13 +40,7 @@ export function SummaryCard() {
         return;
       }
 
-      if (andNew) {
-        reset();
-      } else {
-        reset();
-        // Show a brief confirmation before resetting
-        setError("");
-      }
+      reset();
     } catch {
       setError("Something went wrong. Please try again.");
       setSaving(false);
@@ -88,19 +82,8 @@ export function SummaryCard() {
         <Button variant="ghost" onClick={() => setStep("prayer")}>
           Back
         </Button>
-        <Button
-          variant="outline"
-          onClick={() => handleSave(true)}
-          disabled={saving}
-        >
-          Save and Register Another
-        </Button>
-        <Button
-          onClick={() => handleSave(false)}
-          disabled={saving}
-          className="flex-1"
-        >
-          {saving ? "Saving..." : "Save and Done"}
+        <Button variant="outline" onClick={handleSave} disabled={saving} className="flex-1">
+          {saving ? "Saving..." : "Save & Register Another"}
         </Button>
       </div>
     </Card>
