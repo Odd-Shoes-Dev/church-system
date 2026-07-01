@@ -12,13 +12,17 @@ export function ServicePicker() {
   const { data, updateData, setStep } = useRegistrationStore();
   const { cache } = usePrefetchCache();
   const [selected, setSelected] = useState(data.serviceId ?? "");
+  const [attempted, setAttempted] = useState(false);
 
   const services = cache.services ?? [];
   const loading = cache.loading.services;
 
   function handleNext() {
     const svc = services.find((s) => s.id === selected);
-    if (!svc) return;
+    if (!svc) {
+      setAttempted(true);
+      return;
+    }
     updateData({ serviceId: svc.id, serviceName: svc.name });
     setStep("event");
   }
@@ -38,13 +42,14 @@ export function ServicePicker() {
         label="Which service are you attending?"
         options={services.map((s) => ({ value: s.id, label: s.name }))}
         value={selected}
-        onChange={setSelected}
+        onChange={(v) => { setSelected(v); setAttempted(false); }}
+        error={attempted && !selected ? "Please select a service to continue." : undefined}
       />
       <div className="flex gap-3 mt-6">
         <Button variant="ghost" onClick={() => setStep("first_time")}>
           Back
         </Button>
-        <Button onClick={handleNext} disabled={!selected} className="flex-1">
+        <Button onClick={handleNext} className="flex-1">
           Continue
         </Button>
       </div>

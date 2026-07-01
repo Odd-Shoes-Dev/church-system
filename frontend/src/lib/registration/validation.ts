@@ -33,6 +33,3 @@ export const detailsSchema = z.object({
     .nullable(),
 });
 
-export const prayerRequestSchema = z.object({
-  prayerRequest: z.string().optional(),
-});

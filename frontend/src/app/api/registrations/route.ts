@@ -67,6 +67,10 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  if (!body.serviceId) {
+    return NextResponse.json({ error: "Please select a service to continue." }, { status: 422 });
+  }
+
   const regRows = await db.query<{ id: string }>(
     `INSERT INTO registrations (tenant_id, branch_id, member_id, service_id, event_id, registered_by)
      VALUES ($1, $2, $3, $4, $5, $6)
