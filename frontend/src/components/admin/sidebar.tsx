@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { clsx } from "clsx";
 
 interface NavItem {
@@ -28,6 +28,12 @@ interface SidebarProps {
 
 export function Sidebar({ userName, branchName, role }: SidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  async function handleSignOut() {
+    await fetch("/api/auth/logout", { method: "POST" });
+    router.push("/login");
+  }
 
   return (
     <aside className="w-64 shrink-0 border-r border-[var(--color-border)] bg-[var(--color-surface)] flex flex-col h-screen sticky top-0">
@@ -83,14 +89,12 @@ export function Sidebar({ userName, branchName, role }: SidebarProps) {
         <p className="text-xs text-[var(--color-muted)] capitalize">
           {role.replace("_", " ")}
         </p>
-        <form action="/api/auth/logout" method="POST" className="mt-2">
-          <button
-            type="submit"
-            className="text-xs text-[var(--color-muted)] hover:text-[var(--color-text)] underline cursor-pointer"
-          >
-            Sign out
-          </button>
-        </form>
+        <button
+          onClick={handleSignOut}
+          className="mt-2 text-xs text-[var(--color-muted)] hover:text-[var(--color-text)] underline cursor-pointer"
+        >
+          Sign out
+        </button>
       </div>
     </aside>
   );
