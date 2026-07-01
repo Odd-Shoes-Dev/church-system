@@ -21,19 +21,19 @@ VALUES (
   'b0000000-0000-0000-0000-000000000001'::uuid,
   'admin@gmail.com',
   'Super Admin',
-  '$2b$10$8K1p/MuLkGZWSsOJwZRkCe5hVz0xGlGPg8BqF1p3dXzVn0cYLOqVy',
+  '$2b$10$gKJPIfqdofwVGa9NytLkouq1v6FqrLIKCs5ZEJMeVgv/3sYQOFoPq',
   'super_admin'
 ) ON CONFLICT (tenant_id, email) DO NOTHING;
 
--- registrar: reg@grace.test / password123
+-- registrar: reg@grace.com / password123
 INSERT INTO users (id, tenant_id, branch_id, email, name, password_hash, role)
 VALUES (
   'c0000000-0000-0000-0000-000000000002'::uuid,
   'a0000000-0000-0000-0000-000000000001'::uuid,
   'b0000000-0000-0000-0000-000000000001'::uuid,
-  'reg@grace.test',
+  'reg@grace.com',
   'Jane Registrar',
-  '$2b$10$8K1p/MuLkGZWSsOJwZRkCe5hVz0xGlGPg8BqF1p3dXzVn0cYLOqVy',
+  '$2b$10$gKJPIfqdofwVGa9NytLkouq1v6FqrLIKCs5ZEJMeVgv/3sYQOFoPq',
   'registrar'
 ) ON CONFLICT (tenant_id, email) DO NOTHING;
 
