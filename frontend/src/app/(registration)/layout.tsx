@@ -10,10 +10,16 @@ export default async function RegistrationLayout({
   const user = await requireAuth();
 
   const db = getDatabase();
-  const tenant = await db.queryOne<{ name: string; logo_url: string | null }>(
-    "SELECT name, logo_url FROM tenants WHERE id = $1",
-    [user.tenantId]
-  );
+  const [tenant, branch] = await Promise.all([
+    db.queryOne<{ name: string; logo_url: string | null }>(
+      "SELECT name, logo_url FROM tenants WHERE id = $1",
+      [user.tenantId]
+    ),
+    db.queryOne<{ name: string }>(
+      "SELECT name FROM branches WHERE id = $1",
+      [user.branchId]
+    ),
+  ]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -26,9 +32,16 @@ export default async function RegistrationLayout({
               className="h-7 sm:h-8 w-auto object-contain shrink-0"
             />
           )}
-          <h1 className="text-base sm:text-lg font-[var(--font-heading)] text-[var(--color-text)] truncate">
-            {tenant?.name ?? "Registration"}
-          </h1>
+          <div className="flex flex-col min-w-0">
+            <h1 className="text-base sm:text-lg font-[var(--font-heading)] text-[var(--color-text)] truncate leading-tight">
+              {tenant?.name ?? "Registration"}
+            </h1>
+            {branch?.name && (
+              <span className="text-xs text-[var(--color-muted)] truncate">
+                {branch.name}
+              </span>
+            )}
+          </div>
         </div>
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <span className="text-xs sm:text-sm text-[var(--color-muted)] hidden sm:inline">
