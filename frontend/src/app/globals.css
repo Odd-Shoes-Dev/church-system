@@ -41,26 +41,30 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--color-background);
 }
 
-/* Themed scrollbar — uses CSS vars so it updates with any tenant theme */
+/* Scrollbars — narrow, theme-matched, unobtrusive */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 4px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-surface);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-border);
+  background: color-mix(in srgb, var(--color-border) 60%, transparent);
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-secondary);
+  background: var(--color-border);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--color-border) var(--color-surface);
+  scrollbar-color: color-mix(in srgb, var(--color-border) 60%, transparent) transparent;
 }
