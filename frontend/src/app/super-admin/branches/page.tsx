@@ -167,31 +167,33 @@ export default function BranchesPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {branches.map((b) => (
-          <Card key={b.id} className={!b.is_active ? "opacity-60" : ""}>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-lg font-[var(--font-heading)] text-[var(--color-text)]">
-                {b.name}
-              </span>
-              {b.is_main && <Badge>Main</Badge>}
-              {!b.is_active && <Badge variant="warning">Inactive</Badge>}
-            </div>
+          <Card key={b.id}>
+            <div className={!b.is_active ? "opacity-60" : ""}>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-lg font-[var(--font-heading)] text-[var(--color-text)]">
+                  {b.name}
+                </span>
+                {b.is_main && <Badge>Main</Badge>}
+                {!b.is_active && <Badge variant="warning">Inactive</Badge>}
+              </div>
 
-            {b.location && (
-              <p className="text-sm text-[var(--color-muted)] mb-2">
-                {b.location}
-              </p>
-            )}
+              {b.location && (
+                <p className="text-sm text-[var(--color-muted)] mb-2">
+                  {b.location}
+                </p>
+              )}
 
-            <div className="flex gap-4 text-sm mb-3">
-              <span className="text-[var(--color-muted)]">
-                {b.member_count} members
-              </span>
-              <span className="text-[var(--color-muted)]">
-                {b.admin_count} admin{parseInt(b.admin_count) !== 1 ? "s" : ""}
-              </span>
-              <span className="text-[var(--color-muted)]">
-                {b.country_code}
-              </span>
+              <div className="flex gap-4 text-sm mb-3">
+                <span className="text-[var(--color-muted)]">
+                  {b.member_count} members
+                </span>
+                <span className="text-[var(--color-muted)]">
+                  {b.admin_count} admin{parseInt(b.admin_count) !== 1 ? "s" : ""}
+                </span>
+                <span className="text-[var(--color-muted)]">
+                  {b.country_code}
+                </span>
+              </div>
             </div>
 
             <div className="flex gap-2">
