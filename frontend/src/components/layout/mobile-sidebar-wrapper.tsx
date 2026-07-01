@@ -6,11 +6,15 @@ import { clsx } from "clsx";
 interface MobileSidebarWrapperProps {
   sidebar: React.ReactNode;
   children: React.ReactNode;
+  mobileTitle?: string;
+  mobileSubtitle?: string;
 }
 
 export function MobileSidebarWrapper({
   sidebar,
   children,
+  mobileTitle = "Menu",
+  mobileSubtitle,
 }: MobileSidebarWrapperProps) {
   const [open, setOpen] = useState(false);
 
@@ -53,9 +57,16 @@ export function MobileSidebarWrapper({
               <line x1="3" y1="18" x2="21" y2="18" />
             </svg>
           </button>
-          <span className="ml-3 text-sm font-[var(--font-heading)] text-[var(--color-text)]">
-            Menu
-          </span>
+          <div className="ml-3">
+            <span className="text-sm font-[var(--font-heading)] text-[var(--color-text)]">
+              {mobileTitle}
+            </span>
+            {mobileSubtitle && (
+              <p className="text-xs text-[var(--color-muted)] leading-none mt-0.5">
+                {mobileSubtitle}
+              </p>
+            )}
+          </div>
         </div>
         <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
           {children}

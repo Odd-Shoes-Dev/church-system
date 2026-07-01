@@ -22,12 +22,13 @@ const NAV_ITEMS: NavItem[] = [
 
 interface SidebarProps {
   userName: string;
+  churchName: string;
   branchName: string;
   role: string;
   isSuperAdmin?: boolean;
 }
 
-export function Sidebar({ userName, branchName, role, isSuperAdmin }: SidebarProps) {
+export function Sidebar({ userName, churchName, branchName, role, isSuperAdmin }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -39,8 +40,8 @@ export function Sidebar({ userName, branchName, role, isSuperAdmin }: SidebarPro
   return (
     <aside className="w-64 shrink-0 border-r border-[var(--color-border)] bg-[var(--color-surface)] flex flex-col h-screen sticky top-0">
       <div className="p-5 border-b border-[var(--color-border)]">
-        <h2 className="text-lg font-[var(--font-heading)] text-[var(--color-text)]">
-          Administration
+        <h2 className="text-lg font-[var(--font-heading)] text-[var(--color-text)] leading-tight">
+          {churchName || "Administration"}
         </h2>
         <p className="text-xs text-[var(--color-muted)] mt-1">{branchName}</p>
       </div>

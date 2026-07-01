@@ -18,6 +18,7 @@ export default async function SuperAdminLayout({
 
   return (
     <MobileSidebarWrapper
+      mobileTitle={tenant?.name ?? "Church Overview"}
       sidebar={
         <SuperAdminSidebar
           userName={user.name}
