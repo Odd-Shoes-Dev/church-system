@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
+import { SignOutButton } from "@/components/ui/sign-out-button";
 import { clsx } from "clsx";
 
 interface NavItem {
@@ -20,21 +22,43 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/admin/settings", label: "Settings" },
 ];
 
+interface Branch {
+  id: string;
+  name: string;
+}
+
 interface SidebarProps {
   userName: string;
   churchName: string;
   branchName: string;
+  currentBranchId?: string;
+  branches?: Branch[];
   role: string;
   isSuperAdmin?: boolean;
 }
 
-export function Sidebar({ userName, churchName, branchName, role, isSuperAdmin }: SidebarProps) {
+export function Sidebar({ userName, churchName, branchName, currentBranchId, branches = [], role, isSuperAdmin }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [switching, setSwitching] = useState(false);
 
   async function handleSignOut() {
     await fetch("/api/auth/logout", { method: "POST" });
     router.push("/login");
+  }
+
+  async function handleSwitchBranch(branchId: string) {
+    if (branchId === currentBranchId) { setDropdownOpen(false); return; }
+    setSwitching(true);
+    setDropdownOpen(false);
+    await fetch("/api/auth/switch-branch", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ branchId }),
+    });
+    router.refresh();
+    setSwitching(false);
   }
 
   return (
@@ -43,7 +67,57 @@ export function Sidebar({ userName, churchName, branchName, role, isSuperAdmin }
         <h2 className="text-lg font-[var(--font-heading)] text-[var(--color-text)] leading-tight">
           {churchName || "Administration"}
         </h2>
-        <p className="text-xs text-[var(--color-muted)] mt-1">{branchName}</p>
+
+        {isSuperAdmin && branches.length > 1 ? (
+          <div className="relative mt-1">
+            <button
+              onClick={() => setDropdownOpen((o) => !o)}
+              disabled={switching}
+              className="flex items-center gap-1 text-xs text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors cursor-pointer disabled:opacity-50"
+            >
+              <span>{switching ? "Switching..." : branchName}</span>
+              <svg
+                width="10"
+                height="10"
+                viewBox="0 0 10 10"
+                fill="currentColor"
+                className={clsx("transition-transform", dropdownOpen && "rotate-180")}
+              >
+                <path d="M1 3l4 4 4-4" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+
+            {dropdownOpen && (
+              <>
+                <div
+                  className="fixed inset-0 z-10"
+                  onClick={() => setDropdownOpen(false)}
+                />
+                <div className="absolute left-0 top-full mt-1 z-20 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[var(--radius)] shadow-md min-w-[180px] py-1 overflow-hidden">
+                  {branches.map((b) => (
+                    <button
+                      key={b.id}
+                      onClick={() => handleSwitchBranch(b.id)}
+                      className={clsx(
+                        "w-full text-left px-3 py-2 text-xs transition-colors",
+                        b.id === currentBranchId
+                          ? "text-[var(--color-primary)] font-medium bg-[var(--color-primary)]/5"
+                          : "text-[var(--color-text)] hover:bg-[var(--color-background)]"
+                      )}
+                    >
+                      {b.name}
+                      {b.id === currentBranchId && (
+                        <span className="ml-1 text-[var(--color-muted)]">✓</span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        ) : (
+          <p className="text-xs text-[var(--color-muted)] mt-1">{branchName}</p>
+        )}
       </div>
 
       <div className="p-3 border-b border-[var(--color-border)]">
@@ -104,12 +178,7 @@ export function Sidebar({ userName, churchName, branchName, role, isSuperAdmin }
         <p className="text-xs text-[var(--color-muted)] capitalize">
           {role.replace("_", " ")}
         </p>
-        <button
-          onClick={handleSignOut}
-          className="mt-2 text-xs text-[var(--color-muted)] hover:text-[var(--color-text)] underline cursor-pointer"
-        >
-          Sign out
-        </button>
+        <SignOutButton className="mt-2 text-xs text-[var(--color-muted)] hover:text-[var(--color-text)] underline cursor-pointer" />
       </div>
     </aside>
   );

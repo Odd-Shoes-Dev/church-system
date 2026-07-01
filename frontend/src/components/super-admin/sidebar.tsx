@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { clsx } from "clsx";
+import { SignOutButton } from "@/components/ui/sign-out-button";
 
 interface NavItem {
   href: string;
@@ -24,12 +25,6 @@ interface SidebarProps {
 
 export function SuperAdminSidebar({ userName, tenantName }: SidebarProps) {
   const pathname = usePathname();
-  const router = useRouter();
-
-  async function handleSignOut() {
-    await fetch("/api/auth/logout", { method: "POST" });
-    router.push("/login");
-  }
 
   return (
     <aside className="w-64 shrink-0 border-r border-[var(--color-border)] bg-[var(--color-surface)] flex flex-col h-screen sticky top-0">
@@ -88,12 +83,7 @@ export function SuperAdminSidebar({ userName, tenantName }: SidebarProps) {
       <div className="p-4 border-t border-[var(--color-border)]">
         <p className="text-sm text-[var(--color-text)] truncate">{userName}</p>
         <p className="text-xs text-[var(--color-muted)]">Super Admin</p>
-        <button
-          onClick={handleSignOut}
-          className="mt-2 text-xs text-[var(--color-muted)] hover:text-[var(--color-text)] underline cursor-pointer"
-        >
-          Sign out
-        </button>
+        <SignOutButton className="mt-2 text-xs text-[var(--color-muted)] hover:text-[var(--color-text)] underline cursor-pointer" />
       </div>
     </aside>
   );

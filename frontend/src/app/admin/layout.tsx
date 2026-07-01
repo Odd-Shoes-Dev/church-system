@@ -11,7 +11,7 @@ export default async function AdminLayout({
   const user = await requireAuth(["super_admin", "admin", "registrar"]);
 
   const db = getDatabase();
-  const [branch, tenant] = await Promise.all([
+  const [branch, tenant, allBranches] = await Promise.all([
     db.queryOne<{ name: string }>(
       "SELECT name FROM branches WHERE id = $1",
       [user.branchId]
@@ -20,6 +20,12 @@ export default async function AdminLayout({
       "SELECT name FROM tenants WHERE id = $1",
       [user.tenantId]
     ),
+    user.role === "super_admin"
+      ? db.query<{ id: string; name: string }>(
+          "SELECT id, name FROM branches WHERE tenant_id = $1 AND is_active = true ORDER BY is_main DESC, name",
+          [user.tenantId]
+        )
+      : Promise.resolve([]),
   ]);
 
   return (
@@ -31,6 +37,8 @@ export default async function AdminLayout({
           userName={user.name}
           churchName={tenant?.name ?? ""}
           branchName={branch?.name ?? "Unknown Branch"}
+          currentBranchId={user.branchId}
+          branches={allBranches}
           role={user.role}
           isSuperAdmin={user.role === "super_admin"}
         />

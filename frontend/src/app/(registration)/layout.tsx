@@ -1,5 +1,6 @@
 import { requireAuth } from "@/lib/auth/guard";
 import { getDatabase } from "@/lib/providers/database";
+import { SignOutButton } from "@/components/ui/sign-out-button";
 
 export default async function RegistrationLayout({
   children,
@@ -33,14 +34,7 @@ export default async function RegistrationLayout({
           <span className="text-xs sm:text-sm text-[var(--color-muted)] hidden sm:inline">
             {user.name}
           </span>
-          <form action="/api/auth/logout" method="POST">
-            <button
-              type="submit"
-              className="text-xs sm:text-sm text-[var(--color-muted)] hover:text-[var(--color-text)] underline cursor-pointer"
-            >
-              Sign out
-            </button>
-          </form>
+          <SignOutButton />
         </div>
       </header>
       <main className="flex-1 flex items-start sm:items-center justify-center p-3 sm:p-4">
