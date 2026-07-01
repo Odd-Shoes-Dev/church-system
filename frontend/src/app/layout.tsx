@@ -8,6 +8,20 @@ export const metadata: Metadata = {
   description: "Church member registration and attendance tracking",
 };
 
+function slugFromHost(host: string): string | null {
+  const h = host.split(":")[0];
+  const baseDomain = (process.env.BASE_DOMAIN ?? "localhost:3000").split(":")[0];
+  const parts = h.split(".");
+
+  if (parts.length === 2 && parts[1] === "localhost" && parts[0] !== "www") {
+    return parts[0];
+  }
+  if (h !== baseDomain && h.endsWith(`.${baseDomain}`)) {
+    return h.slice(0, h.length - baseDomain.length - 1);
+  }
+  return null;
+}
+
 async function getTenantThemeStyle(): Promise<Record<string, string> | null> {
   try {
     const headerStore = await headers();
@@ -15,7 +29,8 @@ async function getTenantThemeStyle(): Promise<Record<string, string> | null> {
 
     const slug =
       headerStore.get("x-tenant-slug") ??
-      cookieStore.get("tenant-slug")?.value;
+      cookieStore.get("tenant-slug")?.value ??
+      slugFromHost(headerStore.get("host") ?? "");
 
     if (!slug) return null;
 

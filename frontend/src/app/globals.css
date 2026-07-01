@@ -40,3 +40,27 @@ h1, h2, h3, h4, h5, h6 {
   background-color: var(--color-primary);
   color: var(--color-background);
 }
+
+/* Themed scrollbar — uses CSS vars so it updates with any tenant theme */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-secondary);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) var(--color-surface);
+}

@@ -23,6 +23,7 @@ export default async function AdminLayout({
           userName={user.name}
           branchName={branch?.name ?? "Unknown Branch"}
           role={user.role}
+          isSuperAdmin={user.role === "super_admin"}
         />
       }
     >

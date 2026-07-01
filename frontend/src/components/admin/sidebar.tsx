@@ -24,9 +24,10 @@ interface SidebarProps {
   userName: string;
   branchName: string;
   role: string;
+  isSuperAdmin?: boolean;
 }
 
-export function Sidebar({ userName, branchName, role }: SidebarProps) {
+export function Sidebar({ userName, branchName, role, isSuperAdmin }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -82,6 +83,19 @@ export function Sidebar({ userName, branchName, role }: SidebarProps) {
             </Link>
           );
         })}
+        {isSuperAdmin && (
+          <div className="mt-4 pt-4 border-t border-[var(--color-border)]">
+            <p className="px-3 text-xs text-[var(--color-muted)] mb-2 uppercase tracking-wide">
+              Super Admin
+            </p>
+            <Link
+              href="/super-admin"
+              className="px-3 py-2 rounded-[var(--radius)] text-sm text-[var(--color-text)] hover:bg-[var(--color-background)] block"
+            >
+              Church Overview
+            </Link>
+          </div>
+        )}
       </nav>
 
       <div className="p-4 border-t border-[var(--color-border)]">
