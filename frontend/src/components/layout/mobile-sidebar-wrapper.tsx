@@ -15,7 +15,7 @@ export function MobileSidebarWrapper({
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex h-screen overflow-hidden">
       {open && (
         <div
           className="fixed inset-0 bg-black/40 z-40 lg:hidden"
@@ -25,15 +25,15 @@ export function MobileSidebarWrapper({
 
       <div
         className={clsx(
-          "fixed inset-y-0 left-0 z-50 lg:static lg:z-auto transition-transform duration-200",
+          "fixed inset-y-0 left-0 z-50 lg:static lg:z-auto transition-transform duration-200 shrink-0",
           open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         )}
       >
         <div onClick={() => setOpen(false)}>{sidebar}</div>
       </div>
 
-      <div className="flex-1 flex flex-col min-w-0">
-        <div className="lg:hidden border-b border-[var(--color-border)] px-4 py-3 flex items-center">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <div className="lg:hidden border-b border-[var(--color-border)] px-4 py-3 flex items-center shrink-0">
           <button
             onClick={() => setOpen(true)}
             className="text-[var(--color-text)] cursor-pointer p-1"
