@@ -27,11 +27,12 @@ export default function BranchesPage() {
   const [location, setLocation] = useState("");
   const [countryCode, setCountryCode] = useState("+256");
   const [saving, setSaving] = useState(false);
+  const [togglingId, setTogglingId] = useState<string | null>(null);
   const [error, setError] = useState("");
 
   const load = useCallback(() => {
     setLoading(true);
-    fetch("/api/super-admin/branches")
+    return fetch("/api/super-admin/branches")
       .then((r) => r.json())
       .then((d) => setBranches(d.branches ?? []))
       .finally(() => setLoading(false));
@@ -97,12 +98,14 @@ export default function BranchesPage() {
   }
 
   async function toggleActive(id: string, currentlyActive: boolean) {
+    setTogglingId(id);
     await fetch("/api/super-admin/branches", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id, isActive: !currentlyActive }),
     });
-    load();
+    await load();
+    setTogglingId(null);
   }
 
   if (loading) {
@@ -213,9 +216,12 @@ export default function BranchesPage() {
               )}
               <button
                 onClick={() => toggleActive(b.id, b.is_active)}
-                className="text-xs text-[var(--color-muted)] hover:text-[var(--color-text)] underline cursor-pointer"
+                disabled={togglingId === b.id}
+                className="text-xs text-[var(--color-muted)] hover:text-[var(--color-text)] underline cursor-pointer disabled:opacity-50 disabled:cursor-wait"
               >
-                {b.is_active ? "Deactivate" : "Activate"}
+                {togglingId === b.id
+                  ? b.is_active ? "Deactivating..." : "Activating..."
+                  : b.is_active ? "Deactivate" : "Activate"}
               </button>
             </div>
           </Card>
